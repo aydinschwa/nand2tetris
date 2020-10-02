@@ -1,0 +1,54 @@
+function SnakeMath.distance 5
+push argument 2
+push argument 0
+sub
+pop local 0
+push argument 3
+push argument 1
+sub
+pop local 1
+push local 0
+push local 0
+call Math.multiply 2
+pop local 2
+push local 1
+push local 1
+call Math.multiply 2
+pop local 3
+push local 2
+push local 3
+add
+pop local 4
+push local 4
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 500
+pop local 4
+push local 4
+return
+label IF_FALSE0
+push local 4
+call Math.sqrt 1
+pop local 4
+push local 4
+return
+function SnakeMath.mod 0
+label WHILE_EXP0
+push argument 0
+push argument 1
+push constant 1
+sub
+gt
+not
+if-goto WHILE_END0
+push argument 0
+push argument 1
+sub
+pop argument 0
+goto WHILE_EXP0
+label WHILE_END0
+push argument 0
+return

@@ -1,0 +1,121 @@
+
+// File name: projects/09/Snake/Main.jack
+
+class SnakeGame {
+	field Snake snake;
+	field Food food;
+	field ScoreBoard board;
+	field int direction;
+	field int clock;
+	field int score;
+	field int dead;
+	field int start;
+	field char key_pressed;
+	field int speed;
+	
+	constructor SnakeGame new() {
+		let snake = Snake.new(50, 50);
+		let food = Food.new(100, 100);
+		do Screen.clearScreen();
+		let board = ScoreBoard.new();
+		let direction = 1;
+		let clock = 0;
+		let score = 0;
+		let dead = 0;
+		let start = 0;
+		return this;
+	}
+
+    method void run() {
+    	while (start = 0){
+    		let key_pressed = Keyboard.keyPressed();
+    		if (key_pressed = 69) {let speed = 140; let start=1;} // easy
+    		if (key_pressed = 77) {let speed = 110; let start=1;} // medium
+    		if (key_pressed = 72) {let speed = 80; let start=1;}  // hard
+    	}
+    	do board.print_screen();
+    	do food.draw();
+
+    	while (dead = 0){
+    		let clock = clock + 7; // used with mod to generate random numbers
+    		do change_direction();
+    		do check_bite();
+    		do check_dead();
+    		do Sys.wait(speed);
+    	}
+
+    	do Output.moveCursor(11, 27);
+    	do Output.printString("GAME OVER");
+    	return;
+
+    }
+
+    method void dispose() {
+    	do snake.dispose();
+    	do food.dispose();
+    	do board.dispose();
+    	do Memory.deAlloc(this);
+    	return;
+    }
+
+    method void change_direction(){
+	    let key_pressed = Keyboard.keyPressed();
+
+		if (key_pressed = 132) {
+			if (~(direction = 2)){
+				let direction = 1;
+			}
+		}
+
+		if (key_pressed = 130) {
+			if (~(direction = 1)){
+				let direction = 2;
+			}
+		}
+
+		if (key_pressed = 131) {
+			if (~(direction = 4)){
+				let direction = 3;
+			}
+		}
+
+		if (key_pressed = 133) {
+			if (~(direction = 3)){
+				let direction = 4;
+			}
+		}
+
+		if (direction = 1) {do snake.moveRight();}
+	    if (direction = 2) {do snake.moveLeft();}
+	    if (direction = 3) {do snake.moveUp();}
+	    if (direction = 4) {do snake.moveDown();}
+		return;
+	}
+
+	// Check if snake is on top of food
+	method void check_bite(){
+		var int x_head; var int y_head;
+		var int x_food; var int y_food;
+		var int distance;
+		let x_head = snake.head_x(); let y_head = snake.head_y();
+		let x_food = food.getX(); let y_food = food.getY();
+		let distance = SnakeMath.distance(x_head, y_head, x_food, y_food);
+		if (distance < 10) {do food.jump(clock); do snake.addJoint(); 
+							let score = score + 1; do board.add_point(score);}
+		return;
+	}
+
+	// Check if snake has crossed border or crashed into itself
+	method void check_dead(){
+		var int x_head; var int y_head;
+		var int crash;
+		let x_head = snake.head_x(); let y_head = snake.head_y();
+		if (x_head > 482) {let dead = 1; return;}
+		if (x_head < 30) {let dead = 1; return;}
+		if (y_head < 30) {let dead = 1; return;}
+		if (y_head > 225) {let dead = 1; return;}
+		if (score > 2) {let dead = snake.check_crash();}
+		return;
+	}
+
+}

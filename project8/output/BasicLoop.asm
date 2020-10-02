@@ -1,0 +1,149 @@
+// push constant 0
+@0
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// pop local 0
+@0
+D=A
+@1
+D=M+D
+@13
+M=D
+@SP
+M=M-1
+A=M
+D=M
+@13
+A=M
+M=D
+// Initialize loop spot
+(BasicLoop$LOOP_START)
+// push argument 0
+@0
+D=A
+@2
+A=M+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// push local 0
+@0
+D=A
+@1
+A=M+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// add
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=M+D
+M=D
+@SP
+M=M+1
+// pop local 0
+@0
+D=A
+@1
+D=M+D
+@13
+M=D
+@SP
+M=M-1
+A=M
+D=M
+@13
+A=M
+M=D
+// push argument 0
+@0
+D=A
+@2
+A=M+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// push constant 1
+@1
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// subtract
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=M-D
+M=D
+@SP
+M=M+1
+// pop argument 0
+@0
+D=A
+@2
+D=M+D
+@13
+M=D
+@SP
+M=M-1
+A=M
+D=M
+@13
+A=M
+M=D
+// push argument 0
+@0
+D=A
+@2
+A=M+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// Initialize conditional goto statement
+@SP
+M=M-1
+A=M
+D=M
+@BasicLoop$LOOP_START
+D;JNE
+// push local 0
+@0
+D=A
+@1
+A=M+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+(END)
+@END
+0;JMP

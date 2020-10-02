@@ -1,0 +1,71 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/PCLoader.hdl
+
+
+CHIP PCLoader {
+
+   IN in, ins[3], zr, ng;
+   OUT out;
+
+   PARTS:
+
+   // Splitting to the 8 possible jump commands
+
+   DMux8Way (in=true, sel=ins[0..2], a=ZeroZeroZero, b=ZeroZeroOne, c=ZeroOneZero,
+             d=ZeroOneOne, e=OneZeroZero, f=OneZeroOne, g=OneOneZero, h=OneOneOne);
+
+
+   // Jump if greater than 0 (zr=0, ng=0, j3=1)
+   Or (a=zr, b=ng, out=grzero); // Will only be true if both zr and ng are 0
+   Not (in=grzero, out=grzero1);
+   And  (a=ins[0], b=grzero1, out=GrZero); // Will only be true if ins3 is 1
+
+   //Jump if equal to 0 (zr=1, ng=0, j3=0)
+   Or (a=ins[2], b=ins[0], out=eqzero); //Will only be true if j1 and j3 are zero
+   Not (in=eqzero, out=eqzero1);
+   And (a=zr, b=eqzero1, out=EqZero); // Will only be true if zero is true and no inequalities
+
+   //Jump if greater than or equal to 0 (zr=1, ng=0, j3=1)
+   
+   Or (a=EqZero, b=ins[0], out=GrEqZero1);
+   Not (in=ng, out=idk);
+   And (a=GrEqZero1, b=idk, out=GrEqZero);
+
+   //Jump if less than 0 (ng=1, zr=0, j3=0)
+   Or (a=zr, b=ins[0], out=lszero); // Only true if it is not zero and not positive
+   Not (in=lszero, out=lszero1);
+   And (a=ng, b=lszero1, out=LsZero); // Only true if negative is true and zero is false and positive is false
+
+   //Jump if not equal to 0 (zr=0, ng=1, j3=1)
+   //And (a=ng, b=ins[0], out=neqzero); //Only true if negative and positive flags are up
+   //Not (in=zr, out=notzr); // Not zero flag
+   //And (a=neqzero, b=notzr, out=NeqZero);
+   Not (in=zr, out=NeqZero);
+
+   //Jump if less than or equal to 0 (zr=1, ng=1, j3=0)
+   And (a=ng, b=ins[1], out=leeqzero); // Only true if negative and j3 are true
+   Or (a=leeqzero, b=zr, out=LeEqZero);
+
+   // Jump if j1, j2, j3 = 1
+   And (a=ins[0], b=ins[1], out= jum); //Only true if both j1 and j2 are 1
+   And (a=ins[2], b=jum, out=Jum); //Only true if all instructions are 1
+   
+   
+   // Next I want to And all of the conditions together with the Dmux gates to determine if conditions are right
+
+   And (a=ZeroZeroZero, b=ZeroZeroZero, out=false);
+   And (a=ZeroZeroOne, b=GrZero, out=JGT);
+   And (a=ZeroOneZero, b=EqZero, out=JEQ);
+   And (a=ZeroOneOne, b=GrEqZero, out=JGE);
+   And (a=OneZeroZero, b=LsZero, out=JLT);
+   And (a=OneZeroOne, b=NeqZero, out=JNE);
+   And (a=OneOneZero, b=LeEqZero, out=JLE);
+   And (a=OneOneOne, b=Jum, out=JMP);
+
+   Or8Way (in[7]=false, in[6]=JGT, in[5]=JEQ, in[4]=JGE, in[3]=JLT, in[2]=JNE, in[1]=JLE, in[0]=JMP, out=out);
+
+
+
+   }

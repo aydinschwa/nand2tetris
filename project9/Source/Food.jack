@@ -1,0 +1,45 @@
+
+class Food{
+   field int x, y; // Screen location of the food
+   field int size; // Size of the food
+
+   constructor Food new(int Ax, int Ay){
+      let x = Ax;
+      let y = Ay;
+      let size = 5;
+      do draw();
+      return this; }
+
+   method int getX() {
+     return x; }
+
+   method int getY() {
+        return y; }
+
+   method void dispose(){
+      do Memory.deAlloc(this);
+      return; }
+
+   method void draw() {
+      do Screen.setColor(true);
+      do Screen.drawCircle(x, y, size);
+      return; }
+
+   method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawCircle(x, y, size);
+      return; }
+
+   // disappear and reinstantiate in a random location
+   method void jump(int clock) {
+      do erase();
+      let x = SnakeMath.mod(clock, 472);
+      let y = SnakeMath.mod(clock, 215);
+      while (x < 50){let x = x+2;}
+      while (y < 30){let y = y+2;}
+      do draw();
+      return; }
+   
+
+
+}

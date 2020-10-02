@@ -1,0 +1,40 @@
+
+// File name: projects/09/Snake/ScoreBoard.jack
+
+class ScoreBoard {
+	field int score;
+    
+    constructor ScoreBoard new(){
+    	let score = 0;
+        do Output.moveCursor(11, 12);
+        do Output.printString("Welcome to Snake! Select difficulty: ");
+        do Output.moveCursor(13, 16);
+        do Output.printString("[E] easy  [M] medium  [H] hard");
+    	return this;
+    }
+
+    method void dispose(){
+    	do Memory.deAlloc(this);
+    	return;
+    }
+
+    method void print_screen(){
+        do Screen.clearScreen();
+        do Screen.setColor(true);
+        do Screen.drawLine(20, 20, 492, 20); // Top border
+        do Screen.drawLine(20, 235, 492, 235); // Bottom border
+        do Screen.drawLine(492, 20, 492, 235); // Right border
+        do Screen.drawLine(20, 20, 20, 235); // Left border
+        do Output.moveCursor(22, 3);
+        do Output.printString("SCORE: ");
+        return;
+    }
+
+    method void add_point(int score){
+        let score = score;
+        do Output.backSpace();
+        if (score > 10) {do Output.backSpace();}
+        do Output.printInt(score);
+        return;
+    }
+}

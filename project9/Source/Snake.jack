@@ -1,0 +1,147 @@
+
+// File name: projects/09/Snake/Head.jack
+
+
+class Snake {
+   field int x; field int y; // initial x and y of snake
+   field Array x_array; // x location of joints
+   field Array y_array; // y location of joints
+   field int joint_count; // number of snake parts
+   field int size; // width of snake parts
+   field int direction; // where snake is facing
+
+   // Initialize snake body with three parts
+   constructor Snake new(int Ax, int Ay){
+      let x = Ax;
+      let y = Ay;
+      let x_array = Array.new(100);
+      let y_array = Array.new(100);
+      let x_array[0] = (x+20); let x_array[1] = (x+10); let x_array[2] = x;
+      let y_array[0] = y; let y_array[1] = y; let y_array[2] = y;
+      let joint_count = 3;
+      let size = 5;
+      let direction = 1;
+      do draw();
+      return this;
+   }
+
+   method void dispose(){
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method void draw(){
+      var int count;
+      let count = (joint_count-1);
+      while(count > (-1)){
+         do Screen.setColor(true);
+         do Screen.drawCircle(x_array[count], y_array[count], size);
+         let count = count-1;
+      }
+      return;
+   }
+
+   // add body part to snake
+   method void addJoint(){
+      let x_array[joint_count] = (x_array[joint_count-1]);
+      let y_array[joint_count] = (y_array[joint_count-1]);
+      let joint_count = joint_count + 1;
+      return;
+   }
+
+   method void moveRight(){
+      var int count;
+      let count = 0;
+      let direction = 1;
+      do Screen.setColor(false);
+      do Screen.drawCircle(x_array[0], y_array[0], size);
+      while (count < (joint_count-1)) {
+         let x_array[count] = x_array[count+1];
+         let y_array[count] = y_array[count+1];
+         let count = count + 1;
+      }
+      let x_array[count] = (x_array[count]+10); // move the head 10 to the right
+      do Screen.setColor(true);
+      do Screen.drawCircle(x_array[count], y_array[count], size);
+      return;
+   }
+
+   method void moveLeft(){
+      var int count;
+      let count = 0;
+      let direction = 2;
+      do Screen.setColor(false);
+      do Screen.drawCircle(x_array[0], y_array[0], size);
+      while (count < (joint_count-1)) {
+         let x_array[count] = x_array[count+1];
+         let y_array[count] = y_array[count+1];
+         let count = count + 1;
+      }
+      let x_array[count] = (x_array[count]-10); // move the head 10 to the left
+      do Screen.setColor(true);
+      do Screen.drawCircle(x_array[count], y_array[count], size);
+      return;
+   }
+
+   method void moveUp(){
+      var int count;
+      let count = 0;
+      let direction = 3;
+      do Screen.setColor(false);
+      do Screen.drawCircle(x_array[0], y_array[0], size);
+      while (count < (joint_count-1)) {
+         let x_array[count] = x_array[count+1];
+         let y_array[count] = y_array[count+1];
+         let count = count + 1;
+      }
+      let y_array[count] = (y_array[count]-10); // move the head 10 up
+      do Screen.setColor(true);
+      do Screen.drawCircle(x_array[count], y_array[count], size);
+      return;
+   }
+
+   method void moveDown(){
+      var int count;
+      let count = 0;
+      let direction = 4;
+      do Screen.setColor(false);
+      do Screen.drawCircle(x_array[0], y_array[0], size);
+      while (count < (joint_count-1)) {
+         let x_array[count] = x_array[count+1];
+         let y_array[count] = y_array[count+1];
+         let count = count + 1;
+      }
+      let y_array[count] = (y_array[count]+10); // move the head 10 down
+      do Screen.setColor(true);
+      do Screen.drawCircle(x_array[count], y_array[count], size);
+      return;
+   }
+
+   method int head_x(){
+      return x_array[joint_count-1];
+   }
+
+   method int head_y(){
+      return y_array[joint_count-1];
+   }
+
+   // If Euclidean distance between head and a body part is 
+   // less than 9, then they have collided.
+   method int check_crash(){
+      var int head_x; var int head_y;
+      var int curr_x; var int curr_y;
+      var int count;
+      let head_x = x_array[joint_count-1];
+      let head_y = y_array[joint_count-1];
+      let count = 0;
+      while (count < (joint_count-2)){
+         let curr_x = x_array[count];
+         let curr_y = y_array[count];
+         let count = (count + 1);
+         if (SnakeMath.distance(head_x, head_y, curr_x, curr_y) < 9) 
+         {return 1;}
+      }
+      return 0;
+   }
+
+}

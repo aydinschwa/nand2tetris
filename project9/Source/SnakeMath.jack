@@ -1,0 +1,32 @@
+
+// Will implement distance formula, moduluo
+class SnakeMath{
+
+   // Calculates Euclidean distance between two points
+   // used for collision detection between snake and food
+   function int distance(int x1, int y1, int x2, int y2) {
+      var int xdis;
+      var int ydis;
+      var int xsq;
+      var int ysq;
+      var int distance;
+      let xdis = (x2-x1);
+      let ydis = (y2-y1);
+      let xsq = (xdis*xdis);
+      let ysq = (ydis*ydis);
+      let distance = (xsq + ysq);
+      if (distance < 0) {let distance = 500; return distance;}
+      let distance = Math.sqrt(distance);
+      return distance;
+   }
+
+   // Modulus function. Helps generate "random" locations
+   // on the game board for the food to jump to
+   function int mod(int to_mod, int the_mod) {
+   	  while (to_mod > (the_mod-1)) {
+   	  	let to_mod = (to_mod-the_mod);
+   	  	}
+   	  return to_mod;
+   }
+
+}
