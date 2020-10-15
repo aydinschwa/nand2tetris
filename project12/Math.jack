@@ -1,0 +1,133 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Math.jack
+
+/**
+ * A library of commonly used mathematical functions.
+ * Note: Jack compilers implement multiplication and division using OS method calls.
+ */
+class Math {
+    static Array twoToThe;
+
+    /** Initializes the library. */
+    function void init() {
+    let twoToThe = Array.new(15);
+    let twoToThe[0] = 1;
+    let twoToThe[1] = 2;
+    let twoToThe[2] = 4;
+    let twoToThe[3] = 8;
+    let twoToThe[4] = 16;
+    let twoToThe[5] = 32;
+    let twoToThe[6] = 64;
+    let twoToThe[7] = 128;
+    let twoToThe[8] = 256;
+    let twoToThe[9] = 512;
+    let twoToThe[10] = 1024;
+    let twoToThe[11] = 2048;
+    let twoToThe[12] = 4096;
+    let twoToThe[13] = 8192;
+    let twoToThe[14] = 16384;
+    return;
+    }
+
+    /** Returns i'th bit of an array */
+    function boolean bit(int x, int i){
+        var int repeat;
+        var bool ans;
+        let repeat = 14;
+        while (repeat > (i-1)) {
+            if ((x - twoToThe[repeat]) > (-1)){
+                let x = x - twoToThe[repeat];
+                let repeat = repeat - 1;
+                let ans = true;
+            }
+            else {
+                let repeat = repeat - 1;
+                let ans = false;
+            }
+        }
+        return ans;
+    }
+
+    /** Returns the absolute value of x. */
+    function int abs(int x) {
+        if (x < 0) {return (-x);}
+        else {return x;}
+    }
+
+    /** Returns the product of x and y. */
+    function int multiply(int x, int y) {
+        var int sum;
+        var int shiftedX;
+        var int count;
+        var bool neg;
+        let sum = 0;
+        let shiftedX = x;
+        let count = 0;
+        if (y < 0) {let y = Math.abs(y); let neg = true;}
+        while (count <  16) {
+            if (Math.bit(y, count) = -1) {
+                let sum = sum + shiftedX;
+            }
+            let shiftedX = shiftedX + shiftedX;
+            let count = count + 1;
+        }
+        if (neg = true) {let sum = (-sum);}
+        return sum;
+    }
+
+    /** Returns the integer part of x/y. */
+    function int divide(int x, int y) {
+        var int signx, signy, sign;
+        var int q;
+        if (x < 0) {let signx=1;} else {let signx=0;}
+        if (y < 0) {let signy=1;} else {let signy=0;}
+        if (signx + signy = 1) {let sign = -1;} 
+        else {let sign=1;}
+        let x = Math.abs(x);
+        let y = Math.abs(y);
+        if (x < 0) {}
+        if ((y > x) | (y < 0)) {return 0;}
+        let q = Math.divide(x, (2*y));
+        if ((x - (2 * q * y)) < y) {
+            return (sign*(2 * q));
+            }
+        else {
+            return (sign*((2 * q) + 1));}
+    }
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x) {
+        var int start;
+        var int end;
+        var int mid;
+        var int sqr;
+        let start = 1;
+        if (x > 180) {let end = 182; let start = 180;}
+        else {let end = (x/2);}
+        if (x = 0) {return 0;}
+        if (x = 1) {return 1;}
+        while (start < end) {
+            let mid = (start + end) / 2;
+            let sqr = mid*mid;
+            if (sqr = x) {return mid;}
+            if (sqr < x) {let start = mid + 1;}
+            if (sqr > x) {let end = mid - 1;}
+        }
+        return mid;
+    }
+
+
+    /** Returns the greater number. */
+    function int max(int a, int b) {
+    if (a > b) {return a;}
+    else {return b;}
+    }
+
+    /** Returns the smaller number. */
+    function int min(int a, int b) {
+    if (a < b) {return a;}
+    else {return b;}
+    }
+}
